@@ -202,22 +202,27 @@
     paint();
 
     // 직접 끄셨던 분에게는 다음에도 켜지 않는다
+    // 기본값은 '재생'. 직접 끄신 경우에만, 그것도 이번 방문 동안만 기억한다.
+    // (localStorage 를 쓰면 한 번 끈 기기에서 영영 안 켜진다)
     const KEY = 'bgm';
-    const remember = (on) => { try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {} };
+    const remember = (on) => { try { sessionStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {} };
     let wanted = true;
-    try { wanted = localStorage.getItem(KEY) !== 'off'; } catch (e) {}
+    try { wanted = sessionStorage.getItem(KEY) !== 'off'; } catch (e) {}
+    try { localStorage.removeItem(KEY); } catch (e) {}   // 예전에 저장된 '끔' 기록 정리
 
-    const KICKS = ['pointerdown', 'touchstart', 'keydown'];
+    const KICKS = ['pointerdown', 'touchstart', 'touchend', 'click', 'keydown'];
     function dropKick() { KICKS.forEach(ev => document.removeEventListener(ev, kick)); }
     function kick(e) {
       // 버튼을 직접 누른 경우는 아래 클릭 핸들러가 처리한다
       if (e && e.target && e.target.closest && e.target.closest('#bgmToggle')) return;
       dropKick();
+      btn.classList.remove('is-waiting');
       audio.play().catch(() => {});
     }
 
     btn.addEventListener('click', () => {
       dropKick();
+      btn.classList.remove('is-waiting');
       if (audio.paused) { audio.play().catch(() => {}); remember(true); }
       else { audio.pause(); remember(false); }
     });
@@ -226,6 +231,8 @@
 
     // 자동재생을 시도하고, 브라우저가 막으면 첫 터치에 시작한다
     audio.play().catch(() => {
+      // 브라우저가 막았다. 첫 조작에 바로 시작하도록 걸어두고 버튼으로 알린다.
+      btn.classList.add('is-waiting');
       KICKS.forEach(ev => document.addEventListener(ev, kick, { passive: true }));
     });
   }

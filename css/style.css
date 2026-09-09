@@ -574,6 +574,14 @@ button{ font:inherit; color:inherit; cursor:pointer; }
 /* 중국어로 볼 때는 한자를 담을 수 있는 서체로 바꾼다 */
 html[lang="zh-Hant"] body{ font-family:var(--serif-tw); }
 
+/* 자동재생이 막혀 첫 터치를 기다리는 동안 은은히 깜박인다 */
+@keyframes bgmWait{
+  0%,100%{ box-shadow:0 0 0 0 rgba(176,149,106,.45) }
+  50%    { box-shadow:0 0 0 7px rgba(176,149,106,0) }
+}
+.bgm.is-waiting{ animation:bgmWait 2.1s ease-out infinite; }
+@media (prefers-reduced-motion:reduce){ .bgm.is-waiting{ animation:none } }
+
 .bgm{
   position:absolute; top:14px; right:14px;
   pointer-events:auto;
