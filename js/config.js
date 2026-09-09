@@ -75,7 +75,6 @@ const CONFIG = {
   monochrome: ["gal6.jpg"],
 
   gallery: [
-    "gal0.jpg",
     "gal1.jpg",
     "gal3.jpg",
     "gal4.jpg",

@@ -10,7 +10,9 @@
 #      → 나중에 "gal6 을 흑백으로" 처럼 이름으로 지시할 수 있습니다
 #   3) map.jpg 는 약도로 보고 images/map.jpg 에 따로 저장
 #   4) js/config.js 의 monochrome 목록에 있는 사진은 흑백으로 변환
-#   5) js/config.js 의 gallery 목록을 갱신 (대문 사진도 함께 넣습니다)
+#   5) js/config.js 의 gallery 목록을 갱신
+#      (대문 사진은 맨 위에 크게 나오므로 격자에서는 뺍니다.
+#       손으로 바꿔둔 순서는 그대로 지키고 새 사진만 뒤에 붙입니다)
 # =========================================================
 import os, re, sys, glob
 from PIL import Image, ImageOps
@@ -120,6 +122,10 @@ def main():
         print('  %-12s %6.0f KB%s' % (name, size / 1024, tag))
         if not is_map:
             names.append(name)
+
+    # 대문 사진은 맨 위에 크게 나오므로 아래 격자에서는 뺀다
+    hero = os.path.basename(cfg_str(cfg, 'mainPhoto')).lower()
+    names = [n for n in names if n.lower() != hero]
 
     # 손으로 바꿔둔 순서를 지킨다. 기존 목록에 있던 사진은 그 순서 그대로,
     # 새로 들어온 사진만 뒤에 붙인다.
