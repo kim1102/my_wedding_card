@@ -121,8 +121,17 @@ def main():
         if not is_map:
             names.append(name)
 
-    print('갤러리 %d장, 합계 %.1f MB' % (len(names), total / 1048576))
-    update_gallery(names)
+    # 손으로 바꿔둔 순서를 지킨다. 기존 목록에 있던 사진은 그 순서 그대로,
+    # 새로 들어온 사진만 뒤에 붙인다.
+    before = cfg_list(read_cfg(), 'gallery')
+    kept = [n for n in before if n in names]
+    order = kept + [n for n in names if n not in kept]
+
+    print('갤러리 %d장, 합계 %.1f MB' % (len(order), total / 1048576))
+    added = [n for n in order if n not in before]
+    if added:
+        print('  새로 추가: ' + ', '.join(added))
+    update_gallery(order)
     print('완료. 브라우저에서 새로고침하세요.')
     return 0
 
