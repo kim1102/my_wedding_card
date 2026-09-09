@@ -295,6 +295,9 @@ button{ font:inherit; color:inherit; cursor:pointer; }
   grid-template-columns:repeat(3,1fr);
   gap:5px;
 }
+/* 마지막 줄에 한 장만 남으면 왼쪽에 홀로 붙지 않도록 가운데로 옮긴다 */
+.gallery-grid > :last-child:nth-child(3n + 1){ grid-column: 2; }
+
 .gallery-grid button{
   padding:0; border:0; background:var(--bg-alt);
   aspect-ratio:1; overflow:hidden;

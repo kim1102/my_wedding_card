@@ -64,10 +64,18 @@ const CONFIG = {
   // 예식장에서 받은 이미지를 쓰려면 "images/map.jpg" 처럼 적으세요.
   mapImage: "",
 
+  /* 격자 썸네일은 정사각이라 세로 사진의 위아래가 잘립니다.
+     기본은 위에서 30% 지점을 기준으로 자릅니다.
+     인물이 유난히 위/아래에 있는 사진만 여기에 적어주세요. (0% = 맨 위) */
+  focus: {
+    "gal10.jpg": "0%",     // 신랑 얼굴이 사진 맨 위에 있음
+  },
+
   // 흑백으로 바꿔서 저장할 사진 (add_photos.py 실행 시 적용)
   monochrome: ["gal6.jpg"],
 
   gallery: [
+    "gal0.jpg",
     "gal1.jpg",
     "gal3.jpg",
     "gal4.jpg",

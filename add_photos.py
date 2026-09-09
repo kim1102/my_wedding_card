@@ -10,8 +10,7 @@
 #      → 나중에 "gal6 을 흑백으로" 처럼 이름으로 지시할 수 있습니다
 #   3) map.jpg 는 약도로 보고 images/map.jpg 에 따로 저장
 #   4) js/config.js 의 monochrome 목록에 있는 사진은 흑백으로 변환
-#   5) js/config.js 의 gallery 목록을 갱신
-#      (대문 사진 mainPhoto 는 맨 위에 크게 나오므로 격자에서는 뺍니다)
+#   5) js/config.js 의 gallery 목록을 갱신 (대문 사진도 함께 넣습니다)
 # =========================================================
 import os, re, sys, glob
 from PIL import Image, ImageOps
@@ -91,7 +90,6 @@ def main():
 
     cfg = read_cfg()
     mono = set(n.lower() for n in cfg_list(cfg, 'monochrome'))
-    hero = os.path.basename(cfg_str(cfg, 'mainPhoto')).lower()
 
     out = os.path.join(here, 'images', 'gallery')
     os.makedirs(out, exist_ok=True)
@@ -123,14 +121,8 @@ def main():
         if not is_map:
             names.append(name)
 
-    # 대문 사진은 맨 위에 크게 나오므로 아래 격자에서는 뺀다
-    grid = [n for n in names if n.lower() != hero]
-    dropped = len(names) - len(grid)
-
-    print('갤러리 %d장, 합계 %.1f MB' % (len(grid), total / 1048576))
-    if dropped:
-        print('  (대문 사진 %s 는 격자에서 제외)' % hero)
-    update_gallery(grid)
+    print('갤러리 %d장, 합계 %.1f MB' % (len(names), total / 1048576))
+    update_gallery(names)
     print('완료. 브라우저에서 새로고침하세요.')
     return 0
 

@@ -606,11 +606,15 @@
       .map(src);
     if (!photos.length) { $('#gallery').remove(); return; }
 
-    $('#galleryGrid').innerHTML = photos.map((src, i) =>
-      '<button type="button" data-i="' + i + '" aria-label="' + (i + 1) + '번째 사진 크게 보기">' +
-        '<img src="' + esc(src) + '" alt="" loading="lazy">' +
-      '</button>'
-    ).join('');
+    const focus = BASE.focus || {};
+    $('#galleryGrid').innerHTML = photos.map((src, i) => {
+      const name = String(BASE.gallery[i] || '').split('/').pop();
+      const pos = focus[name];
+      return '<button type="button" data-i="' + i + '" aria-label="' + (i + 1) + '번째 사진 크게 보기">' +
+        '<img src="' + esc(src) + '" alt="" loading="lazy"' +
+        (pos ? ' style="object-position:center ' + esc(pos) + '"' : '') + '>' +
+      '</button>';
+    }).join('');
 
     // 로드 실패한 사진은 조용히 제거
     $$('#galleryGrid img').forEach(img => {
