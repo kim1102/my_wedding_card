@@ -73,8 +73,12 @@
                      BASE.tw.names[s]) || s;
 
   /* 단일 파일로 묶을 때 사진이 data: URI 로 들어온다.
-     그 경우 window.__ASSET 에 경로→데이터 표가 실린다. 없으면 경로 그대로 쓴다. */
-  const src = (p) => (window.__ASSET && window.__ASSET[p]) || p;
+     그 경우 window.__ASSET 에 경로→데이터 표가 실린다.
+
+     파일로 서비스할 때는 주소 뒤에 자산 버전을 붙인다. 사진을 바꿔도 파일
+     이름이 그대로라, 이게 없으면 브라우저가 옛 사진을 계속 쓴다. */
+  const VER = BASE.assetVersion ? '?v=' + BASE.assetVersion : '';
+  const src = (p) => (window.__ASSET && window.__ASSET[p]) || (p + VER);
 
   /* ---------- 토스트 ---------- */
   let toastTimer = null;

@@ -14,7 +14,7 @@
 #      (대문 사진은 맨 위에 크게 나오므로 격자에서는 뺍니다.
 #       손으로 바꿔둔 순서는 그대로 지키고 새 사진만 뒤에 붙입니다)
 # =========================================================
-import os, re, sys, glob
+import os, re, sys, glob, time
 from PIL import Image, ImageOps
 
 MAXSIDE = 1600
@@ -71,6 +71,28 @@ def update_gallery(names):
     with open(cfg_path, 'w', encoding='utf-8') as f:
         f.write(new)
     print('  js/config.js 의 gallery 목록을 갱신했습니다.')
+
+
+def stamp_version():
+    """사진이 바뀌었음을 알리는 도장. 사진 주소 뒤에 ?v= 로 붙어서
+       브라우저가 같은 이름의 옛 사진을 계속 쓰는 일을 막는다."""
+    src = read_cfg()
+    ver = time.strftime('%Y%m%d%H%M%S')
+    if re.search(r'assetVersion: "[^"]*"', src):
+        new = re.sub(r'assetVersion: "[^"]*"',
+                     'assetVersion: "' + ver + '"', src, count=1)
+    else:
+        note = [
+            '  // 사진을 바꿀 때마다 새로 찍힙니다. 사진 주소 뒤에 붙어',
+            '  // 브라우저가 같은 이름의 옛 사진을 쓰지 않게 합니다.',
+            '  assetVersion: "' + ver + '",',
+            '',
+            '  gallery: [',
+        ]
+        new = src.replace('  gallery: [', chr(10).join(note), 1)
+    with open(cfg_path, 'w', encoding='utf-8') as f:
+        f.write(new)
+    print('  자산 버전: ' + ver)
 
 
 def main():
@@ -138,6 +160,7 @@ def main():
     if added:
         print('  새로 추가: ' + ', '.join(added))
     update_gallery(order)
+    stamp_version()
     print('완료. 브라우저에서 새로고침하세요.')
     return 0
 

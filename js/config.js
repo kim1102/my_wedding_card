@@ -74,6 +74,10 @@ const CONFIG = {
   // 흑백으로 바꿔서 저장할 사진 (add_photos.py 실행 시 적용)
   monochrome: ["gal7.jpg"],
 
+  // 사진을 바꿀 때마다 새로 찍힙니다. 사진 주소 뒤에 붙어
+  // 브라우저가 같은 이름의 옛 사진을 쓰지 않게 합니다.
+  assetVersion: "20260910031337",
+
   gallery: [
     "gal1.jpg",
     "gal3.jpg",
