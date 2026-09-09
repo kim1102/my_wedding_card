@@ -297,14 +297,24 @@
 
     resize();
 
-    // 사진이 실려야 높이가 정해진다. ResizeObserver 는 화면이 실제로 그려지는
-    // 동안에만 콜백이 오므로, load 이벤트로 한 번 더 확실히 잡는다.
+    // 사진이 실려야 높이가 정해진다. ResizeObserver 는 화면이 실제로 그려질 때만
+    // 콜백이 오므로, load 이벤트와 짧은 재시도로 한 번 더 확실히 잡는다.
     if (photo) {
       if (photo.complete && photo.naturalWidth) resize();
       else photo.addEventListener('load', resize, { once: true });
     }
+    window.addEventListener('load', resize);
     if (window.ResizeObserver) new ResizeObserver(resize).observe(host);
     else window.addEventListener('resize', resize);
+
+    // 위 신호를 모두 놓쳐도 캔버스가 기본 크기(300x150)에 머물지 않도록,
+    // 크기가 잡힐 때까지 잠깐 다시 시도한다. (타이머는 화면을 안 그려도 돈다)
+    let tries = 0;
+    const settle = setInterval(() => {
+      if (W && H) { clearInterval(settle); return; }
+      resize();
+      if (++tries > 20) clearInterval(settle);   // 최대 5초
+    }, 250);
 
     start();
     if ('IntersectionObserver' in window) {
