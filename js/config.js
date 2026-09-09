@@ -74,6 +74,9 @@ const CONFIG = {
     "gal5.jpg",
     "gal6.jpg",
     "gal7.jpg",
+    "gal8.jpg",
+    "gal9.jpg",
+    "gal10.jpg",
   ],
 
 

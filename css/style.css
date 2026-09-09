@@ -302,6 +302,9 @@ button{ font:inherit; color:inherit; cursor:pointer; }
 }
 .gallery-grid img{
   width:100%; height:100%; object-fit:cover;
+  /* 세로 사진을 정사각으로 자르면 가운데가 남아 얼굴이 잘린다.
+     사람은 대개 위쪽에 있으므로 잘라내는 창을 위로 올린다. */
+  object-position:center 30%;
   transition:transform .35s ease;
 }
 .gallery-grid button:active img{ transform:scale(1.06); }
