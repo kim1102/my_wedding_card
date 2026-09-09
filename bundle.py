@@ -97,7 +97,8 @@ def main():
         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'
         'family=Gowun+Batang:wght@400;700&'
-        'family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap">',
+        'family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&'
+        'family=Parisienne&display=swap">',
         '<style>\n%s\n</style>' % read('css', 'style.css'),
         body_of(read('index.html')),
         '<script>window.__ASSET = %s;</script>' % json.dumps(assets, ensure_ascii=False),

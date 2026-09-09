@@ -129,6 +129,34 @@ button{ font:inherit; color:inherit; cursor:pointer; }
   z-index:2;
 }
 
+/* 사진이 종이로 풀리는 자리에 손글씨 한 줄.
+   사진 아래쪽이 밝은 아이보리라 흰 글씨는 묻힌다 → 금색으로 쓴다. */
+.hero__script{
+  position:absolute; left:0; right:0; bottom:7%;
+  z-index:3;                       /* 그라데이션(2)보다 위 */
+  margin:0; padding:0 18px;
+  line-height:1.15;
+  text-align:center;
+  font-family:'Parisienne', var(--latin);
+  font-size:34px;
+  color:var(--gold);
+  pointer-events:none;
+}
+.hero__script span{
+  display:inline-block;
+  margin:0 .12em;
+  opacity:0;
+  transform:translateY(15px);
+  animation:scriptIn .95s cubic-bezier(.2,.75,.3,1) forwards;
+}
+@keyframes scriptIn{
+  to{ opacity:1; transform:none; }
+}
+@media (prefers-reduced-motion:reduce){
+  .hero__script span{ opacity:1; transform:none; animation:none; }
+}
+@media (max-width:340px){ .hero__script{ font-size:29px; } }
+
 .hero__body{ padding:0 var(--pad); }
 .hero__label{
   margin:26px 0 0;
