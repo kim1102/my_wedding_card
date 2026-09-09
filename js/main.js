@@ -247,7 +247,6 @@
      ========================================================= */
   function initPetals() {
     if (!C.options.showPetals) return;
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     mountFx($('.hero__photo'), $('#mainPhoto'),      fallingPetals);
     mountFx($('#interlude'),   $('#interludePhoto'), risingGlow);
   }
@@ -266,7 +265,13 @@
     if (!ctx) { cv.remove(); return; }
 
     let W = 0, H = 0, items = [], raf = null, running = false, last = 0;
+    let seededH = 0;                 // 입자를 뿌릴 때 기준이 된 높이
     const env = { W: 0, H: 0, rand: (a, b) => a + Math.random() * (b - a) };
+
+    /* 기기에서 '동작 줄이기'를 켠 분에게는 움직임을 빼되, 그림까지 없애지는 않는다.
+       꽃잎과 빛망울을 흩어진 그대로 한 번만 그려 정물처럼 남긴다. */
+    const still = !!(window.matchMedia &&
+                     window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
     function resize() {
       const b = host.getBoundingClientRect();
@@ -278,9 +283,20 @@
       cv.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      // 사진이 실리기 전의 작은 높이로 뿌려두면 입자가 위쪽에 몰려 안 보인다.
+      // 높이가 크게 달라지면 처음부터 다시 흩는다.
+      if (Math.abs(H - seededH) > H * 0.25) { items.length = 0; seededH = H; }
+
       const want = spec.count(W, H);
       while (items.length < want) items.push(spec.make(env, true));
       items.length = want;
+      if (still) drawOnce();
+    }
+
+    // dt = 0 이라 위치는 그대로 두고 그리기만 한다
+    function drawOnce() {
+      ctx.clearRect(0, 0, W, H);
+      for (const it of items) spec.step(it, 0, env, ctx);
     }
 
     function frame(t) {
@@ -292,7 +308,11 @@
       raf = requestAnimationFrame(frame);
     }
 
-    function start() { if (running) return; running = true; last = 0; raf = requestAnimationFrame(frame); }
+    function start() {
+      if (still) { drawOnce(); return; }          // 움직이지 않고 한 장만
+      if (running) return;
+      running = true; last = 0; raf = requestAnimationFrame(frame);
+    }
     function stop()  { running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
 
     resize();
