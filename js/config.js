@@ -72,7 +72,7 @@ const CONFIG = {
   },
 
   // 흑백으로 바꿔서 저장할 사진 (add_photos.py 실행 시 적용)
-  monochrome: ["gal6.jpg"],
+  monochrome: ["gal7.jpg"],
 
   gallery: [
     "gal1.jpg",
